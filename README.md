@@ -1,16 +1,9 @@
-# image_compressor
+# 桌面图片压缩工具
 
-A new Flutter project.
+这是一款桌面图片压缩工具，使用flutter开发，选择文件夹，就可以压缩文件夹中的所有图片，目前支持 jpg 和 png
 
-## Getting Started
+## windows 打包命令
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+```
+flutter build windows --dart-define=RunEnv=dist
+```
