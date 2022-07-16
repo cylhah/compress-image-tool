@@ -1,6 +1,6 @@
-import 'dart:developer';
-
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:image_compressor/cmd-handler/cmd_handler.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -10,6 +10,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  String inputDirPath = '';
+
   @override
   void initState() {
     super.initState();
@@ -61,7 +63,11 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void onChooseTap() {
-    log('message');
+  void onChooseTap() async {
+    String? selectedDirectory = await FilePicker.platform.getDirectoryPath();
+
+    if (selectedDirectory != null) {
+      CmdHandler.handleCompressDirImages(selectedDirectory);
+    }
   }
 }
