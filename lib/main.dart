@@ -6,8 +6,8 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await windowManager.ensureInitialized();
 
-  WindowOptions windowOptions =
-      const WindowOptions(size: Size(400, 650), title: '图片压缩工具');
+  WindowOptions windowOptions = const WindowOptions(
+      size: Size(400, 650), title: '图片压缩工具', minimumSize: Size(400, 650));
   windowManager.waitUntilReadyToShow(windowOptions, () async {
     await windowManager.show();
     await windowManager.focus();

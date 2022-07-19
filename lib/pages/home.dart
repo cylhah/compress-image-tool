@@ -25,7 +25,29 @@ class _HomePageState extends State<HomePage> {
         color: const Color.fromARGB(255, 44, 45, 49),
         child: Column(
           children: [
-            Expanded(flex: 1, child: Container()),
+            Expanded(
+              flex: 1,
+              child: Container(
+                  child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Image(
+                      width: 234,
+                      image: AssetImage('assets/images/drag-tip-bg.png')),
+                  Container(
+                    margin: const EdgeInsets.only(top: 10),
+                    child: const Text(
+                      '拖入jpg/png开始压缩\n为你的图片减减肥',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          color: Color.fromARGB(255, 255, 255, 255),
+                          letterSpacing: 2.0,
+                          height: 1.5),
+                    ),
+                  )
+                ],
+              )),
+            ),
             Container(
                 height: 40,
                 color: const Color.fromARGB(255, 31, 34, 38),
