@@ -11,6 +11,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   String inputDirPath = '';
+  bool isSelectDirBtnHover = false;
 
   @override
   void initState() {
@@ -31,6 +32,8 @@ class _HomePageState extends State<HomePage> {
                 child: Row(
                   children: [
                     MouseRegion(
+                      onEnter: (_) => onSelectDirBtnEnter(true),
+                      onExit: (_) => onSelectDirBtnEnter(false),
                       cursor: SystemMouseCursors.click,
                       child: GestureDetector(
                         onTap: onChooseTap,
@@ -41,16 +44,13 @@ class _HomePageState extends State<HomePage> {
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
                               border: Border.all(
-                                  width: 1,
-                                  color:
-                                      const Color.fromARGB(255, 45, 140, 240)),
+                                  width: 1, color: getSelectBtnColor()),
                               borderRadius:
                                   const BorderRadius.all(Radius.circular(3))),
-                          child: const Text(
+                          child: Text(
                             '选择文件夹',
                             style: TextStyle(
-                                color: Color.fromARGB(255, 45, 140, 240),
-                                fontSize: 12),
+                                color: getSelectBtnColor(), fontSize: 12),
                           ),
                         ),
                       ),
@@ -69,5 +69,17 @@ class _HomePageState extends State<HomePage> {
     if (selectedDirectory != null) {
       CmdHandler.handleCompressDirImages(selectedDirectory);
     }
+  }
+
+  Color getSelectBtnColor() {
+    return isSelectDirBtnHover
+        ? const Color.fromARGB(255, 87, 163, 243)
+        : const Color.fromARGB(255, 45, 140, 240);
+  }
+
+  void onSelectDirBtnEnter(bool isHover) {
+    setState(() {
+      isSelectDirBtnHover = isHover;
+    });
   }
 }

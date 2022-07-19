@@ -1,12 +1,12 @@
 class EnvHandler {
-  static const String RunEnv =
+  static const String runEnv =
       String.fromEnvironment('RunEnv', defaultValue: 'local');
 
   static bool isLocal() {
-    return EnvHandler.RunEnv == 'local';
+    return EnvHandler.runEnv == 'local';
   }
 
   static bool isDist() {
-    return EnvHandler.RunEnv == 'dist';
+    return EnvHandler.runEnv == 'dist';
   }
 }
