@@ -3,7 +3,27 @@ import 'package:path/path.dart' as p;
 import 'dart:io';
 
 class CmdHandler {
-  static String getExePath(String exeName) {
+  String inputDirPath = '';
+  List<FileDataItem> handleFileList = [];
+
+  CmdHandler(this.inputDirPath) {
+    var dir = Directory(inputDirPath);
+    var entities = dir.listSync();
+    for (var i = 0; i < entities.length; i++) {
+      var item = entities[i];
+      if (item is File) {
+        String filePath = item.path;
+        String ext = p.extension(filePath).toLowerCase();
+        if (ext == '.png' || ext == '.jpg') {
+          int fileSize = item.lengthSync();
+          FileDataItem fileDataItem = FileDataItem(filePath, fileSize);
+          handleFileList.add(fileDataItem);
+        }
+      }
+    }
+  }
+
+  String getExePath(String exeName) {
     if (EnvHandler.isLocal()) {
       return p.normalize(p.join(p.current, './assets/exes/$exeName.exe'));
     } else {
@@ -12,31 +32,87 @@ class CmdHandler {
     }
   }
 
-  static String getJpgCompressExePath() {
-    return CmdHandler.getExePath('jpeg-recompress');
+  String getJpgCompressExePath() {
+    return getExePath('jpeg-recompress');
   }
 
-  static String getPngCompressExePath() {
-    return CmdHandler.getExePath('pngquant');
+  String getPngCompressExePath() {
+    return getExePath('pngquant');
   }
 
-  static void handleCompressDirImages(String inputDirPath) async {
-    String jpgCompressExePath = CmdHandler.getJpgCompressExePath();
-    String pngCompressExePath = CmdHandler.getPngCompressExePath();
+  void handleCompressImages(Function stateUpdateCB) {
+    String jpgCompressExePath = getJpgCompressExePath();
+    String pngCompressExePath = getPngCompressExePath();
 
-    var dir = Directory(inputDirPath);
-    var files = dir.listSync();
-    for (var i = 0; i < files.length; i++) {
-      var item = files[i];
-      String filePath = item.path;
-      String ext = p.extension(filePath).toLowerCase();
-      if (ext == '.png') {
-        Process.run(pngCompressExePath,
-            ['--quality=65-80', filePath, '--ext=.png', '--force']);
-      } else if (ext == '.jpg') {
-        Process.run(jpgCompressExePath,
-            ['--quality', 'high', '--min', '60', filePath, filePath]);
+    for (var i = 0; i < handleFileList.length; i++) {
+      var item = handleFileList[i];
+      String filePath = item.filePath;
+      String fileExt = item.fileExt;
+      if (fileExt == '.png') {
+        Process.run(pngCompressExePath, [
+          '--quality=65-80',
+          filePath,
+          '--ext=.png',
+          '--force'
+        ]).then((value) {
+          File ouput = File(filePath);
+          var newSize = ouput.lengthSync();
+          stateUpdateCB(i, FileDataItemStatus.processSuccess, newSize);
+        });
+      } else if (fileExt == '.jpg') {
+        Process.run(jpgCompressExePath, [
+          '--quality',
+          'high',
+          '--min',
+          '60',
+          filePath,
+          filePath
+        ]).then((value) {
+          File ouput = File(filePath);
+          var newSize = ouput.lengthSync();
+          stateUpdateCB(i, FileDataItemStatus.processSuccess, newSize);
+        });
+        ;
       }
     }
+  }
+}
+
+enum FileDataItemStatus { init, processSuccess, processError }
+
+class FileDataItem {
+  String filePath = '';
+  int origionFileSize = 0;
+  int newFileSize = 0;
+  FileDataItemStatus status = FileDataItemStatus.init;
+
+  FileDataItem(this.filePath, this.origionFileSize);
+
+  String get fileName {
+    return p.basename(filePath);
+  }
+
+  String calcFileByteStr(int size) {
+    double res = size / 1024;
+    return res.toStringAsFixed(1);
+  }
+
+  String get fileExt {
+    return p.extension(filePath).toLowerCase();
+  }
+
+  String get newFileKBStr {
+    String res = calcFileByteStr(newFileSize);
+    return '${res}KB';
+  }
+
+  String get reducePercentStr {
+    double percent = (newFileSize - origionFileSize) / origionFileSize * 100;
+    percent = percent.abs();
+    return '${percent.toStringAsFixed(0)}%';
+  }
+
+  bool get isInit {
+    return status == FileDataItemStatus.init;
   }
 }
