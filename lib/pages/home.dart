@@ -1,4 +1,6 @@
+import 'dart:developer';
 import 'dart:io';
+import 'package:desktop_drop/desktop_drop.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:image_compressor/cmd-handler/cmd_handler.dart';
@@ -24,7 +26,12 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
+        body: DropTarget(
+      onDragDone: (details) {
+        String dropDirPath = details.files[0].path;
+        handleDir(dropDirPath);
+      },
+      child: Container(
         color: const Color.fromARGB(255, 44, 45, 49),
         child: Column(
           children: [
@@ -68,7 +75,7 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
-    );
+    ));
   }
 
   Column hasHandledItemContent() {
@@ -198,18 +205,22 @@ class _HomePageState extends State<HomePage> {
     String? selectedDirectory = await FilePicker.platform.getDirectoryPath();
 
     if (selectedDirectory != null) {
-      if (!hasHandledItem) {
-        cmdHandler = CmdHandler(selectedDirectory);
-        setState(() {
-          hasHandledItem = true;
-        });
-      } else {
-        setState(() {
-          cmdHandler = CmdHandler(selectedDirectory);
-        });
-      }
-      cmdHandler.handleCompressImages(listItemUpdater);
+      handleDir(selectedDirectory);
     }
+  }
+
+  void handleDir(String dirPath) {
+    if (!hasHandledItem) {
+      cmdHandler = CmdHandler(dirPath);
+      setState(() {
+        hasHandledItem = true;
+      });
+    } else {
+      setState(() {
+        cmdHandler = CmdHandler(dirPath);
+      });
+    }
+    cmdHandler.handleCompressImages(listItemUpdater);
   }
 
   void listItemUpdater(int index, FileDataItemStatus status, int newFileSize) {
