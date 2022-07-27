@@ -3,23 +3,33 @@ import 'package:path/path.dart' as p;
 import 'dart:io';
 
 class CmdHandler {
-  String inputDirPath = '';
+  String inputFilePath = '';
   List<FileDataItem> handleFileList = [];
 
-  CmdHandler(this.inputDirPath) {
-    var dir = Directory(inputDirPath);
-    var entities = dir.listSync();
-    for (var i = 0; i < entities.length; i++) {
-      var item = entities[i];
-      if (item is File) {
-        String filePath = item.path;
-        String ext = p.extension(filePath).toLowerCase();
-        if (ext == '.png' || ext == '.jpg') {
-          int fileSize = item.lengthSync();
-          FileDataItem fileDataItem = FileDataItem(filePath, fileSize);
-          handleFileList.add(fileDataItem);
+  CmdHandler(this.inputFilePath) {
+    var type = FileSystemEntity.typeSync(inputFilePath);
+    if (type == FileSystemEntityType.directory) {
+      var dir = Directory(inputFilePath);
+      var entities = dir.listSync();
+      for (var i = 0; i < entities.length; i++) {
+        var item = entities[i];
+        if (item is File) {
+          checkAddFileToList(item);
         }
       }
+    } else if (type == FileSystemEntityType.file) {
+      File item = File(inputFilePath);
+      checkAddFileToList(item);
+    }
+  }
+
+  void checkAddFileToList(File file) {
+    String filePath = file.path;
+    String ext = p.extension(filePath).toLowerCase();
+    if (ext == '.png' || ext == '.jpg') {
+      int fileSize = file.lengthSync();
+      FileDataItem fileDataItem = FileDataItem(filePath, fileSize);
+      handleFileList.add(fileDataItem);
     }
   }
 

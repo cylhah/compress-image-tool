@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:io';
 import 'package:desktop_drop/desktop_drop.dart';
 import 'package:file_picker/file_picker.dart';
@@ -28,8 +27,8 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
         body: DropTarget(
       onDragDone: (details) {
-        String dropDirPath = details.files[0].path;
-        handleDir(dropDirPath);
+        String dropDPath = details.files[0].path;
+        handleFile(dropDPath);
       },
       child: Container(
         color: const Color.fromARGB(255, 44, 45, 49),
@@ -205,19 +204,19 @@ class _HomePageState extends State<HomePage> {
     String? selectedDirectory = await FilePicker.platform.getDirectoryPath();
 
     if (selectedDirectory != null) {
-      handleDir(selectedDirectory);
+      handleFile(selectedDirectory);
     }
   }
 
-  void handleDir(String dirPath) {
+  void handleFile(String path) {
     if (!hasHandledItem) {
-      cmdHandler = CmdHandler(dirPath);
+      cmdHandler = CmdHandler(path);
       setState(() {
         hasHandledItem = true;
       });
     } else {
       setState(() {
-        cmdHandler = CmdHandler(dirPath);
+        cmdHandler = CmdHandler(path);
       });
     }
     cmdHandler.handleCompressImages(listItemUpdater);
