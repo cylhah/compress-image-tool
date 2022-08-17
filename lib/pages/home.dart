@@ -27,8 +27,10 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
         body: DropTarget(
       onDragDone: (details) {
-        String dropDPath = details.files[0].path;
-        handleFile(dropDPath);
+        var paths = details.files.map(((e) {
+          return e.path;
+        })).toList();
+        handleFile(paths);
       },
       child: Container(
         color: const Color.fromARGB(255, 44, 45, 49),
@@ -204,19 +206,19 @@ class _HomePageState extends State<HomePage> {
     String? selectedDirectory = await FilePicker.platform.getDirectoryPath();
 
     if (selectedDirectory != null) {
-      handleFile(selectedDirectory);
+      handleFile([selectedDirectory]);
     }
   }
 
-  void handleFile(String path) {
+  void handleFile(List<String> paths) {
     if (!hasHandledItem) {
-      cmdHandler = CmdHandler(path);
+      cmdHandler = CmdHandler(paths);
       setState(() {
         hasHandledItem = true;
       });
     } else {
       setState(() {
-        cmdHandler = CmdHandler(path);
+        cmdHandler = CmdHandler(paths);
       });
     }
     cmdHandler.handleCompressImages(listItemUpdater);

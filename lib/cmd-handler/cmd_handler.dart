@@ -4,12 +4,20 @@ import 'dart:io';
 
 class CmdHandler {
   String inputFilePath = '';
+  List<String> inputFilePaths = [];
   List<FileDataItem> handleFileList = [];
 
-  CmdHandler(this.inputFilePath) {
-    var type = FileSystemEntity.typeSync(inputFilePath);
+  CmdHandler(this.inputFilePaths) {
+    for (var i = 0; i < inputFilePaths.length; i++) {
+      String item = inputFilePaths[i];
+      handleFilePath(item);
+    }
+  }
+
+  handleFilePath(String inputPath) {
+    var type = FileSystemEntity.typeSync(inputPath);
     if (type == FileSystemEntityType.directory) {
-      var dir = Directory(inputFilePath);
+      var dir = Directory(inputPath);
       var entities = dir.listSync();
       for (var i = 0; i < entities.length; i++) {
         var item = entities[i];
@@ -18,7 +26,7 @@ class CmdHandler {
         }
       }
     } else if (type == FileSystemEntityType.file) {
-      File item = File(inputFilePath);
+      File item = File(inputPath);
       checkAddFileToList(item);
     }
   }
