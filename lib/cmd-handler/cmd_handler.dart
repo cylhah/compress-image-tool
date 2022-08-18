@@ -3,7 +3,6 @@ import 'package:path/path.dart' as p;
 import 'dart:io';
 
 class CmdHandler {
-  String inputFilePath = '';
   List<String> inputFilePaths = [];
   List<FileDataItem> handleFileList = [];
 
