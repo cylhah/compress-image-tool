@@ -2,6 +2,12 @@
 
 这是一款桌面图片压缩工具，使用flutter开发，选择文件夹，就可以压缩文件夹中的所有图片，目前支持 jpg 和 png
 
+## 安装依赖
+
+```
+flutter packages get
+```
+
 ## windows 打包命令
 
 ```
