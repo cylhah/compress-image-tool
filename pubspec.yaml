@@ -1,7 +1,7 @@
 name: image_compressor
 description: A new Flutter project.
 publish_to: "none"
-version: 1.0.2+3
+version: 1.0.3+3
 
 environment:
     sdk: ">=2.17.3 <3.0.0"
@@ -10,10 +10,11 @@ dependencies:
     flutter:
         sdk: flutter
     window_manager: ^0.2.5
-    file_picker: ^4.6.1
     cupertino_icons: ^1.0.2
     path: ^1.8.1
     desktop_drop: ^0.3.3
+    package_info_plus: ^3.0.2
+    file_picker: ^5.2.5
 
 dev_dependencies:
     flutter_test:
