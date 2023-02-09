@@ -2,8 +2,8 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:image_compressor/request/base_request.dart';
 
-class MyRequest extends BaseRequest {
-  MyRequest(super.baseUrl);
+class ResRequest extends BaseRequest {
+  ResRequest(super.baseUrl);
 
   Future<Response> getPubspec() {
     return sendRequest(
@@ -18,4 +18,4 @@ class MyRequest extends BaseRequest {
   }
 }
 
-MyRequest myRequestInst = MyRequest('');
+ResRequest resRequestInst = ResRequest('');

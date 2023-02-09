@@ -4,7 +4,8 @@ import 'package:desktop_drop/desktop_drop.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:image_compressor/cmd-handler/cmd_handler.dart';
-import 'package:image_compressor/request/my_request.dart';
+import 'package:image_compressor/common/version_checker.dart';
+import 'package:image_compressor/request/res_request.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -47,7 +48,34 @@ class _HomePageState extends State<HomePage> {
             Container(
                 height: 40,
                 color: const Color.fromARGB(255, 31, 34, 38),
-            )
+                child: Row(
+                  children: [
+                    MouseRegion(
+                      onEnter: (_) => onSelectDirBtnEnter(true),
+                      onExit: (_) => onSelectDirBtnEnter(false),
+                      cursor: SystemMouseCursors.click,
+                      child: GestureDetector(
+                        onTap: onCheckUpdateTap,
+                        child: Container(
+                          margin: const EdgeInsets.only(left: 12),
+                          width: 70,
+                          height: 22,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                              border: Border.all(
+                                  width: 1, color: getSelectBtnColor()),
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(3))),
+                          child: Text(
+                            '检查更新',
+                            style: TextStyle(
+                                color: getSelectBtnColor(), fontSize: 12),
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
+                ))
           ],
         ),
       ),
@@ -177,12 +205,10 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void onChooseTap() async {
-    String? selectedDirectory = await FilePicker.platform.getDirectoryPath();
-
-    if (selectedDirectory != null) {
-      handleFile([selectedDirectory]);
-    }
+  void onCheckUpdateTap() async {
+    var hasNewVersion = await VersionChecker.instance.hasNewVersion();
+    if (hasNewVersion) {
+    } else {}
   }
 
   void handleFile(List<String> paths) {
@@ -197,13 +223,6 @@ class _HomePageState extends State<HomePage> {
       });
     }
     cmdHandler.handleCompressImages(listItemUpdater);
-
-    // testM();
-  }
-
-  void testM() async {
-    var res = await myRequestInst.getPubspec();
-    log(res.data.toString());
   }
 
   void listItemUpdater(int index, FileDataItemStatus status, int newFileSize) {
