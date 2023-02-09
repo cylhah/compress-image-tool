@@ -1,11 +1,10 @@
+import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 import 'package:desktop_drop/desktop_drop.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:image_compressor/cmd-handler/cmd_handler.dart';
 import 'package:image_compressor/common/version_checker.dart';
-import 'package:image_compressor/request/res_request.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -19,6 +18,7 @@ class _HomePageState extends State<HomePage> {
   String inputDirPath = '';
   bool hasHandledItem = false;
   bool isSelectDirBtnHover = false;
+  bool showToast = false;
 
   @override
   void initState() {
@@ -27,59 +27,84 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: DropTarget(
-      onDragDone: (details) {
-        var paths = details.files.map(((e) {
-          return e.path;
-        })).toList();
-        handleFile(paths);
-      },
-      child: Container(
-        color: const Color.fromARGB(255, 44, 45, 49),
-        child: Column(
-          children: [
-            Expanded(
-              flex: 1,
-              child: hasHandledItem
-                  ? hasHandledItemContent()
-                  : noHandledItemContent(),
-            ),
-            Container(
-                height: 40,
-                color: const Color.fromARGB(255, 31, 34, 38),
-                child: Row(
-                  children: [
-                    MouseRegion(
-                      onEnter: (_) => onSelectDirBtnEnter(true),
-                      onExit: (_) => onSelectDirBtnEnter(false),
-                      cursor: SystemMouseCursors.click,
-                      child: GestureDetector(
-                        onTap: onCheckUpdateTap,
-                        child: Container(
-                          margin: const EdgeInsets.only(left: 12),
-                          width: 70,
-                          height: 22,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                              border: Border.all(
-                                  width: 1, color: getSelectBtnColor()),
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(3))),
-                          child: Text(
-                            '检查更新',
-                            style: TextStyle(
-                                color: getSelectBtnColor(), fontSize: 12),
+    return Stack(
+      children: [
+        Scaffold(
+            body: DropTarget(
+          onDragDone: (details) {
+            var paths = details.files.map(((e) {
+              return e.path;
+            })).toList();
+            handleFile(paths);
+          },
+          child: Container(
+            color: const Color.fromARGB(255, 44, 45, 49),
+            child: Column(
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: hasHandledItem
+                      ? hasHandledItemContent()
+                      : noHandledItemContent(),
+                ),
+                Container(
+                    height: 40,
+                    color: const Color.fromARGB(255, 31, 34, 38),
+                    child: Row(
+                      children: [
+                        MouseRegion(
+                          onEnter: (_) => onSelectDirBtnEnter(true),
+                          onExit: (_) => onSelectDirBtnEnter(false),
+                          cursor: SystemMouseCursors.click,
+                          child: GestureDetector(
+                            onTap: onCheckUpdateTap,
+                            child: Container(
+                              margin: const EdgeInsets.only(left: 12),
+                              width: 70,
+                              height: 22,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                  border: Border.all(
+                                      width: 1, color: getSelectBtnColor()),
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(3))),
+                              child: Text(
+                                '检查更新',
+                                style: TextStyle(
+                                    color: getSelectBtnColor(), fontSize: 12),
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
-                    )
-                  ],
-                ))
-          ],
-        ),
-      ),
-    ));
+                        )
+                      ],
+                    ))
+              ],
+            ),
+          ),
+        )),
+        Offstage(
+          offstage: !showToast,
+          child: Center(
+            child: Container(
+              decoration: const BoxDecoration(
+                  color: Color.fromARGB(125, 0, 0, 0),
+                  borderRadius: BorderRadius.all(Radius.circular(10))),
+              child: const Padding(
+                padding:
+                    EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
+                child: Text(
+                  '已经是最新版本了',
+                  style: TextStyle(
+                      color: Color.fromARGB(255, 255, 255, 255),
+                      decoration: TextDecoration.none,
+                      fontSize: 16),
+                ),
+              ),
+            ),
+          ),
+        )
+      ],
+    );
   }
 
   Column hasHandledItemContent() {
@@ -208,7 +233,17 @@ class _HomePageState extends State<HomePage> {
   void onCheckUpdateTap() async {
     var hasNewVersion = await VersionChecker.instance.hasNewVersion();
     if (hasNewVersion) {
-    } else {}
+    } else {
+      setState(() {
+        showToast = true;
+      });
+
+      Timer(const Duration(milliseconds: 2500), () {
+        setState(() {
+          showToast = false;
+        });
+      });
+    }
   }
 
   void handleFile(List<String> paths) {
