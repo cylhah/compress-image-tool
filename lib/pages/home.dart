@@ -1,8 +1,10 @@
+import 'dart:developer';
 import 'dart:io';
 import 'package:desktop_drop/desktop_drop.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:image_compressor/cmd-handler/cmd_handler.dart';
+import 'package:image_compressor/request/my_request.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -195,6 +197,13 @@ class _HomePageState extends State<HomePage> {
       });
     }
     cmdHandler.handleCompressImages(listItemUpdater);
+
+    // testM();
+  }
+
+  void testM() async {
+    var res = await myRequestInst.getPubspec();
+    log(res.data.toString());
   }
 
   void listItemUpdater(int index, FileDataItemStatus status, int newFileSize) {
