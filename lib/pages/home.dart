@@ -1,10 +1,7 @@
-import 'dart:async';
-import 'dart:developer';
 import 'dart:io';
 import 'package:desktop_drop/desktop_drop.dart';
 import 'package:flutter/material.dart';
 import 'package:image_compressor/cmd-handler/cmd_handler.dart';
-import 'package:image_compressor/common/version_checker.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -48,36 +45,9 @@ class _HomePageState extends State<HomePage> {
                       : noHandledItemContent(),
                 ),
                 Container(
-                    height: 40,
-                    color: const Color.fromARGB(255, 31, 34, 38),
-                    child: Row(
-                      children: [
-                        MouseRegion(
-                          onEnter: (_) => onSelectDirBtnEnter(true),
-                          onExit: (_) => onSelectDirBtnEnter(false),
-                          cursor: SystemMouseCursors.click,
-                          child: GestureDetector(
-                            onTap: onCheckUpdateTap,
-                            child: Container(
-                              margin: const EdgeInsets.only(left: 12),
-                              width: 70,
-                              height: 22,
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                  border: Border.all(
-                                      width: 1, color: getSelectBtnColor()),
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.circular(3))),
-                              child: Text(
-                                '检查更新',
-                                style: TextStyle(
-                                    color: getSelectBtnColor(), fontSize: 12),
-                              ),
-                            ),
-                          ),
-                        )
-                      ],
-                    ))
+                  height: 40,
+                  color: const Color.fromARGB(255, 31, 34, 38),
+                )
               ],
             ),
           ),
@@ -230,21 +200,23 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void onCheckUpdateTap() async {
-    var hasNewVersion = await VersionChecker.instance.hasNewVersion();
-    if (hasNewVersion) {
-    } else {
-      setState(() {
-        showToast = true;
-      });
+  // void onCheckUpdateTap() async {
+  //   var hasNewVersion = await VersionChecker.instance.hasNewVersion();
+  //   if (hasNewVersion) {
+  //   } else {
+  //     setState(() {
+  //       showToast = true;
+  //     });
+  //
+  //     Timer(const Duration(milliseconds: 2500), () {
+  //       setState(() {
+  //         showToast = false;
+  //       });
+  //     });
+  //   }
+  // }
 
-      Timer(const Duration(milliseconds: 2500), () {
-        setState(() {
-          showToast = false;
-        });
-      });
-    }
-  }
+  // void onDownloadProgress(double percent) {}
 
   void handleFile(List<String> paths) {
     if (!hasHandledItem) {

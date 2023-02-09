@@ -7,6 +7,7 @@ import 'package:version/version.dart';
 
 class VersionChecker {
   late PackageInfo packageInfo;
+  late String serverVersion;
 
   static late VersionChecker instance;
 
@@ -21,23 +22,13 @@ class VersionChecker {
     return severVersion > currentVersion;
   }
 
-  bool isVersionGreaterThan(String newVersion, String currentVersion){
-    List<String> currentV = currentVersion.split(".");
-    List<String> newV = newVersion.split(".");
-    bool a = false;
-    for (var i = 0 ; i <= 2; i++){
-      a = int.parse(newV[i]) > int.parse(currentV[i]);
-      if(int.parse(newV[i]) != int.parse(currentV[i])) break;
-    }
-    return a;
-  }
-
   Future<Map> getServerAppVersion() async {
     var res = await resRequestInst.getPubspec();
     var yamlMap = loadYaml(res.data) as Map;
     String version = yamlMap['version'];
     String buildName = version.split('+')[0];
     String buildNumber = version.split('+')[1];
+    serverVersion = buildName;
     return {'buildName': buildName, 'buildNumber': buildNumber};
   }
 }
