@@ -34,12 +34,16 @@ class VersionChecker {
     return {'buildName': buildName, 'buildNumber': buildNumber};
   }
 
-  void executeUpdater() {
+  Future<Process> executeUpdater() {
     String updaterExePath = getExeFilePath('updater');
-    log(updaterExePath);
-    Process.run(updaterExePath, [
-      getAppResPath(serverVersion),
-      p.current,
-    ]);
+    return Process.start(
+        updaterExePath,
+        [
+          getAppResPath(serverVersion),
+          p.current,
+          p.join(p.current, 'image_compressor.exe'),
+        ],
+        mode: ProcessStartMode.detached,
+        runInShell: true);
   }
 }
