@@ -1,4 +1,4 @@
-import 'package:image_compressor/common/env_handler.dart';
+import 'package:image_compressor/common/util.dart';
 import 'package:path/path.dart' as p;
 import 'dart:io';
 
@@ -40,21 +40,12 @@ class CmdHandler {
     }
   }
 
-  String getExePath(String exeName) {
-    if (EnvHandler.isLocal()) {
-      return p.normalize(p.join(p.current, './assets/exes/$exeName.exe'));
-    } else {
-      return p.normalize(
-          p.join(p.current, './data/flutter_assets/assets/exes/$exeName.exe'));
-    }
-  }
-
   String getJpgCompressExePath() {
-    return getExePath('jpeg-recompress');
+    return getExeFilePath('jpeg-recompress');
   }
 
   String getPngCompressExePath() {
-    return getExePath('pngquant');
+    return getExeFilePath('pngquant');
   }
 
   void handleCompressImages(Function stateUpdateCB) {

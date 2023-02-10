@@ -1,5 +1,7 @@
 import 'dart:developer';
-
+import 'dart:io';
+import 'package:path/path.dart' as p;
+import 'package:image_compressor/common/util.dart';
 import 'package:image_compressor/request/res_request.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:yaml/yaml.dart';
@@ -30,5 +32,14 @@ class VersionChecker {
     String buildNumber = version.split('+')[1];
     serverVersion = buildName;
     return {'buildName': buildName, 'buildNumber': buildNumber};
+  }
+
+  void executeUpdater() {
+    String updaterExePath = getExeFilePath('updater');
+    log(updaterExePath);
+    Process.run(updaterExePath, [
+      getAppResPath(serverVersion),
+      p.current,
+    ]);
   }
 }
