@@ -47,36 +47,37 @@ class _HomePageState extends State<HomePage> {
                       : noHandledItemContent(),
                 ),
                 Container(
-                    height: 40,
-                    color: const Color.fromARGB(255, 31, 34, 38),
-                    child: Row(
-                      children: [
-                        MouseRegion(
-                          onEnter: (_) => onSelectDirBtnEnter(true),
-                          onExit: (_) => onSelectDirBtnEnter(false),
-                          cursor: SystemMouseCursors.click,
-                          child: GestureDetector(
-                            onTap: onCheckUpdateTap,
-                            child: Container(
-                              margin: const EdgeInsets.only(left: 12),
-                              width: 70,
-                              height: 22,
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                  border: Border.all(
-                                      width: 1, color: getSelectBtnColor()),
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.circular(3))),
-                              child: Text(
-                                '检查更新',
-                                style: TextStyle(
-                                    color: getSelectBtnColor(), fontSize: 12),
-                              ),
-                            ),
-                          ),
-                        )
-                      ],
-                    ))
+                  height: 40,
+                  color: const Color.fromARGB(255, 31, 34, 38),
+                  // child: Row(
+                  //   children: [
+                  //     MouseRegion(
+                  //       onEnter: (_) => onSelectDirBtnEnter(true),
+                  //       onExit: (_) => onSelectDirBtnEnter(false),
+                  //       cursor: SystemMouseCursors.click,
+                  //       child: GestureDetector(
+                  //         onTap: onCheckUpdateTap,
+                  //         child: Container(
+                  //           margin: const EdgeInsets.only(left: 12),
+                  //           width: 70,
+                  //           height: 22,
+                  //           alignment: Alignment.center,
+                  //           decoration: BoxDecoration(
+                  //               border: Border.all(
+                  //                   width: 1, color: getSelectBtnColor()),
+                  //               borderRadius: const BorderRadius.all(
+                  //                   Radius.circular(3))),
+                  //           child: Text(
+                  //             '检查更新',
+                  //             style: TextStyle(
+                  //                 color: getSelectBtnColor(), fontSize: 12),
+                  //           ),
+                  //         ),
+                  //       ),
+                  //     )
+                  //   ],
+                  // )
+                )
               ],
             ),
           ),
@@ -231,10 +232,9 @@ class _HomePageState extends State<HomePage> {
 
   void onCheckUpdateTap() async {
     var hasNewVersion = await VersionChecker.instance.hasNewVersion();
-    hasNewVersion = true;
     if (hasNewVersion) {
       VersionChecker.instance.executeUpdater();
-      // exit(0);
+      exit(0);
     } else {
       setState(() {
         showToast = true;
