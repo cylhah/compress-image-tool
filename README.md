@@ -11,11 +11,11 @@ flutter packages get
 ## windows 打包命令
 
 ```
-flutter build windows --dart-define=RunEnv=dist
+fvm flutter build windows --dart-define=RunEnv=dist
 ```
 
 ## 自定义的打包命令
 可以把windows打包命令打包完的产物添加到压缩包，并读取当前的版本号，输出zip包到dist目录下
 ```
-dart run .\buildScript\build.dart
+fvm dart run .\buildScript\build.dart
 ```
